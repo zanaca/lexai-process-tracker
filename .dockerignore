@@ -1,0 +1,6 @@
+data
+log
+node_modules
+.cache
+.config
+.pki

@@ -1,0 +1,67 @@
+<div class="container">
+<br>
+  <div>
+    <button class="btn btn-info pull-right" onClick="window.location='/'" >Voltar para página principal</button>
+  </div>
+  <br>
+    <h3>Itinerário:  🛫<strong>{{itinerary.origin}}</strong> para <strong>{{itinerary.destination}}</strong>🛬 com <strong>{{itinerary.nights}}</strong> noite(s)
+
+      <div class="pull-right">Última duração de busca: {{duration}}segundos<br>Última busca concluída: {{last_scan_date}}</div>
+    </h3>
+    <hr>
+
+    <h4>Menor preço por PAX em múltiplas coletas até {{days_length}} dias à frente, em {{currency}}</h4>
+    <button class="btn btn-primary" onclick="Hurb.fpt.multipleRunsToggle()" title="Clique na legenda para mostrar/esconder um a um">Esconder/Mostrar todas as rodadas</button> <button class="btn btn-primary" onclick="Hurb.fpt.multipleRunsToggle(true)"  title="Clique na legenda para mostrar/esconder um a um">Mostrar apenas primeira e última rodada</button>
+    <canvas id="lineMultiple"></canvas>
+    <hr>
+    <h4>Limites de preço por PAX, em {{currency}}</h4>
+    <canvas id="lineHistory"></canvas>
+    <hr>
+    <h4>Listagem de preços, por PAX</h4>
+    <button class="btn btn-primary" onClick="Hurb.fpt.getHistoryCSV(historyData, '{{itinerary.origin}}-{{itinerary.destination}}-{{itinerary.nights}}noites.csv')">Baixar tabela em formato CSV</button>
+    <table id="itinerary" class="table table-bordered table-striped table-hover">
+        <thread>
+        <tr>
+            <th scope="col">Data</th>
+            <th scope="col">Preço mais baixo</th>
+            <th scope="col">Preço mais alto</th>
+            <th scope="col">Diagrama<br>de caixa <a href="https://pt.wikipedia.org/wiki/Diagrama_de_caixa" target="wikipedia">(?)</a></th>
+            <th scope="col">Compania<br>Aérea</th>
+            <th scope="col">Prevedor<br>mais barato</th>
+        </tr>
+    </thread>
+    <tbody>
+      {{#historyFormatted}}
+       <tr {{#if today}}class="text-primary" title="Hoje"{{else}}{{/if}}>
+        <td><strong>{{date}}</strong></td>
+        <td><strong>{{low}}</strong></td>
+        <td><strong>{{high}}</strong></td>
+        <td>
+          <div class="boxplot" title="Mediana: {{median}}">
+            <div class="lineL"></div>
+            <div class="lower" style="margin-left:{{boxplot.lineL}}%;width:{{boxplot.lower}}%"></div>
+            <div class="upper" style="width:{{boxplot.upper}}%"></div>
+          </div>
+        </td>
+        <td><strong>{{airline}}</strong></td>
+        <td><strong>{{source}}</strong></td>
+        </tr>
+      {{/historyFormatted}}
+    </tbody>
+    </table>
+    <button class="btn btn-primary" onClick="Hurb.fpt.getHistoryCSV(historyData, '{{itinerary.origin}}-{{itinerary.destination}}-{{itinerary.nights}}noites.csv')">Baixar tabela em formato CSV</button>
+    <hr>
+    <h4>Distribuição das companias aéreas com menor preço</h4>
+    <canvas id="pieAirlines"></canvas>
+</div>
+
+
+<script>
+  window.historyData = {{{history}}};
+  window.onload = () => {
+    Hurb.fpt.historyChart(historyData);
+    Hurb.fpt.multipleRunsChart({{{multiple}}});
+    Hurb.fpt.airlinesChart({{{airlines}}});
+  }
+
+</script>

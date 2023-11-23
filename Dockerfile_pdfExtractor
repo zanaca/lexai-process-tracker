@@ -1,0 +1,14 @@
+FROM python:3-slim
+    ENV PORT 42002
+    ENV APPDIR /usr/seqoai
+    EXPOSE $PORT
+    WORKDIR $APPDIR
+
+    RUN useradd -ms /bin/sh -d $APPDIR sequoai
+
+    RUN pip install pdfminer.six pynsq requests
+
+    COPY Dockerfile_pdfExtractor_entrypoint.py $APPDIR/entrypoint.py
+
+    # USER sequoai
+    ENTRYPOINT $APPDIR/entrypoint.py

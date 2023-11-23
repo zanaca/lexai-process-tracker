@@ -1,0 +1,6 @@
+libkrb5-dev
+python
+python-dev
+build-essential
+tzdata
+yarn
